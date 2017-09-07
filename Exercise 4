@@ -1,0 +1,86 @@
+setwd("/Users/ishani/Desktop/AMMA 2017/Data/data_2017")
+data_csv.df <- read.csv(file="/Users/ishani/Desktop/AMMA 2017/Data/data_2017/student/student-mat.csv")
+
+firt_table=read.table("student-mat.csv",sep=";",header=TRUE)
+second_table=read.table("student-por.csv",sep=";",header=TRUE)
+
+final_table<- merge(firt_table,second_table,by=c("school","sex","age","address","famsize","Pstatus","Medu","Fedu","Mjob","Fjob","reason","nursery","internet"))
+
+female_grade1=0
+female_grade2=0
+female_grade3=0
+male_grade1=0
+male_grade2=0
+male_grade3=0
+count_female=0
+count_male=0
+# reset directory and read file
+View(final_table)
+for(i in 1:nrow(final_table))
+  {
+      final_table$combined_absences[i]= final_table$absences.x[i] + final_table$absences.y[i]
+      if(final_table$sex[i]=="F")
+      {
+           count_female=count_female+1
+            female_grade1=female_grade1 + final_table$G1.x[i] + final_table$G1.y[i]
+            female_grade2=female_grade2 + final_table$G2.x[i] + final_table$G2.y[i]
+           female_grade2=female_grade3 + final_table$G3.x[i] + final_table$G3.y[i]
+         }
+      else
+       {
+            count_male=count_male+1
+           male_grade1=male_grade1 + final_table$G1.x[i] + final_table$G1.y[i]
+            male_grade2=male_grade2 + final_table$G2.x[i] + final_table$G2.y[i]
+            male_grade2=male_grade3 + final_table$G3.x[i] + final_table$G3.y[i]  
+          }
+   }
+ avrg_female_grd=  (female_grade1+female_grade2+female_grade3)/3
+ avrg_male_grd=  (male_grade1+male_grade2+male_grade3)/3
+ final_avrg_fml=avrg_female_grd/female_count
+ final_avrg_ml=avrg_male_grd/male_count
+ View(final_table)
+ max_G1 = max(final_table$G1.x + final_table$G1.y)
+ max_G2 = max(final_table$G2.x + final_table$G2.y)
+ max_G3 = max(final_table$G3.x + final_table$G3.y)
+ 
+ for(j in 1:length(final_table$G3.x))
+ {  
+   if(final_table$G1.x[j]+final_table$G1.y[j] == max_G1)
+   {Guardian_G1 = final_table$guardian.x[j]
+   Gender_G1 = final_table$sex[j]
+   }
+ }  
+ Guardian_G1
+ Gender_G1
+ 
+ for(j in 1:length(final_table$G3.x))
+ {  
+   if(final_table$G2.x[j]+final_table$G2.y[j] == max_G1)
+   {Guardian_G2 = final_table$guardian.x[j]
+   Gender_G2 = final_table$sex[j]
+   }
+ }  
+ Guardian_G2
+ Gender_G2
+ 
+ for(j in 1:length(final_table$G3.x))
+ {  
+   if(final_table$G3.x[j]+final_table$G3.y[j] == max_G1)
+   {Guardian_G3 = final_table$guardian.x[j]
+   Gender_G3 = final_table$sex[j]
+   }
+ }  
+ Guardian_G3
+ Gender_G3
+ 
+ avrg_20<-0
+ avrg_40<-0
+ avrg_60<-0
+ avrg_80<-0
+ avrg_100<-0
+ quantile(final_table$combined_absences, probs=seq(0,1,0.20), na.rm=FALSE, names=TRUE, type=6)
+ avrg_20<- mean(final_table$combined_absences[final_table$combined_absences>=quantile(final_table$combined_absences, 0.20, na.rm=TRUE)], na.rm=TRUE)
+ avrg_40<- mean(final_table$combined_absences[final_table$combined_absences>=quantile(final_table$combined_absences, 0.40, na.rm=TRUE)], na.rm=TRUE)
+ avrg_60<- mean(final_table$combined_absences[final_table$combined_absences>=quantile(final_table$combined_absences, 0.60, na.rm=TRUE)], na.rm=TRUE)
+ avrg_80<- mean(final_table$combined_absences[final_table$combined_absences>=quantile(final_table$combined_absences, 0.80, na.rm=TRUE)], na.rm=TRUE)
+ avrg_100<- mean(final_table$combined_absences[final_table$combined_absences>=quantile(final_table$combined_absences, 1.00, na.rm=TRUE)], na.rm=TRUE)
